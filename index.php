@@ -20,14 +20,16 @@ if (isset($_POST['telefone'])){
     $nome = addslashes($_POST['nome']);
     $telefone = addslashes($_POST['telefone']);
     $email = addslashes($_POST['email']);
-    $pessoa->cadastraPessoa($nome,$telefone,$email);
+
+  //  $pessoa->cadastraPessoa($nome,$telefone,$email);
+
     //deixa o preenchimeno obrigatorio
     // se nao tiver vazio nome e telefone e email
 
-//    if (empty($nome) && empty($telefone) && empty($email))
-//    {
-//        $pessoa->cadastraPessoa($nome,$telefone, $email);
-//    }
+    if (!empty($nome) && !empty($telefone) && !empty($email))
+    {
+        $pessoa->cadastraPessoa($nome,$telefone, $email);
+    }
 }
 ?>
 <section id="esquerda">
@@ -70,8 +72,14 @@ if (isset($_POST['telefone'])){
                     }//fim if
                     
                }//fim do forech
-                echo "<td><a href=''>Editar </a> <a href=''>Excluir</a> </td>";
-                echo "</tr>";
+                ?>
+                <td>
+                     <a href=''>Editar </a>
+                     <a href="index.php?id=<?php echo $dados[$i]['id'];?>">Excluir</a>
+
+                </td>
+
+                <?php
             }//fim do for
             // se esta vazio
         }else{
@@ -94,3 +102,12 @@ if (isset($_POST['telefone'])){
 ?>
 </body>
 </html>
+<?php
+    if (isset($_GET['id'])){
+
+        $idPessa = addslashes($_GET['id']);
+        $pessoa->excluirPessoa($idPessa);
+        header("location: index.php");
+
+    }
+?>

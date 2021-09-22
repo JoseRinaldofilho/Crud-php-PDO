@@ -43,8 +43,16 @@ class Pessoa{
             $cmd->bindValue(":t",$telefone);//bind valor subistitue o valor e coloca variavel
             $cmd->bindValue(":e",$email);//bind valor subistitue o valor e coloca variavel
             $cmd->execute();
+            echo "Pessoa cadastrada com Sucesso !!".$nome;
             return true;
         }
+    }
+    // excluir pessoa
+    public function excluirPessoa($id)
+    {
+        $cmd = $this->pdo->prepare("DELETE FROM `pessoa` WHERE id = :id");
+        $cmd->bindValue(":id",$id);
+        $cmd->execute();
     }
 
 
