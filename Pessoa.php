@@ -54,6 +54,33 @@ class Pessoa{
         $cmd->bindValue(":id",$id);
         $cmd->execute();
     }
+    // BUSCA OS DADOS DE UMA PESSOA ESPECIFICA
+    public function buscaDadosPessoa($id)
+    {
+        $res = array();
+        $cmd = $this->pdo->prepare("SELECT * FROM pessoa WHERE id = :id");
+        $cmd->bindValue(":id",$id);
+        $cmd->execute();
+        // pega a informação e tranforma em um array usando o comando fatchall
+        $res = $cmd->fetch(PDO::FETCH_ASSOC);// fach porque e so um registro
+        return $res;// caso nao venhda dados do banco cria um variavel em cima
+    }
+
+    // ATUALIZAR DADOS NO BANCO DE DADOS
+    public function atualizarDados($id,$nome,$telefone,$email)
+    {
+        // antes de atualizar, verifica se o email ja esta cadastrado
+
+
+            $cmd = $this->pdo->prepare("UPDATE pessoa SET nome = :n, telefone = :t,email = :e WHERE id = :id");
+            $cmd->bindValue(":n", $nome);
+            $cmd->bindValue(":t", $telefone);
+            $cmd->bindValue(":e", $email);
+            $cmd->bindValue(":id", $id);
+            $cmd->execute();
+
+        }
+
 
 
 }

@@ -14,39 +14,86 @@ $pessoa = new Pessoa("crudpdo","localhost","root","");
 </head>
 <body>
 <?php
-if (isset($_POST['telefone'])){
+if (isset($_POST['telefone'])){ // ckicou no botao cadastra ou no botao atualizar
     //nao devemso busca direto usa addslashes
-
-    $nome = addslashes($_POST['nome']);
-    $telefone = addslashes($_POST['telefone']);
-    $email = addslashes($_POST['email']);
-
-  //  $pessoa->cadastraPessoa($nome,$telefone,$email);
-
-    //deixa o preenchimeno obrigatorio
-    // se nao tiver vazio nome e telefone e email
-
-    if (!empty($nome) && !empty($telefone) && !empty($email))
+      //--------------- editar -----------------
+    if (isset($_GET['id_up']) && !empty($_GET['id_up']))
     {
-        $pessoa->cadastraPessoa($nome,$telefone, $email);
+        $id_update= addslashes($_GET['id_up']);
+        $nome = addslashes($_POST['nome']);
+        $telefone = addslashes($_POST['telefone']);
+        $email = addslashes($_POST['email']);
+
+        if (!empty($nome) && !empty($telefone) && !empty($email))
+        {
+            $pessoa->atualizarDados($id_update,$nome,$telefone, $email);
+            header("location: index.php");
+        }
     }
+
+
+    ///------------------------cadastra-------------------------------
+    else
+    {
+        $nome = addslashes($_POST['nome']);
+        $telefone = addslashes($_POST['telefone']);
+        $email = addslashes($_POST['email']);
+
+        //  $pessoa->cadastraPessoa($nome,$telefone,$email);
+
+        //deixa o preenchimeno obrigatorio
+        // se nao tiver vazio nome e telefone e email
+
+        if (!empty($nome) && !empty($telefone) && !empty($email))
+        {
+            $pessoa->cadastraPessoa($nome,$telefone, $email);
+
+        }
+
+    }
+
+
+
 }
 ?>
+<?php
+    if (isset($_GET['id_up'])){//se a pessoa clicou no botao editar
+
+        $id_up = addslashes($_GET['id_up']);
+        $res = $pessoa->buscaDadosPessoa($id_up);
+
+    }
+
+?>
+
+
 <section id="esquerda">
 
     <form method="post">
         <h2>Cadastra pessoa</h2>
         <label for="nome">Nome</label>
-        <input type="text" name="nome" id="nome" required>
+        <input type="text" value="<?php if (isset($res)){
+            echo $res['nome']; } ?>"
+       name="nome" id="nome" required>
 
         <label for="telefone">Telefone</label>
-        <input type="text" name="telefone" id="telefone" required>
+        <input type="text"
+               value="<?php if (isset($res)){
+                   echo $res['telefone']; } ?>"
+               name="telefone" id="telefone" required>
 
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
-        <input type="submit" value="Cadastra">
+        <input type="email" name="email" id="email" required
+               value="<?php if (isset($res)){echo $res['email']; } ?>"
+        >
+        <input style="background-color: aqua"  type="submit"
+               value="<?php if (isset($res)){ echo "Atualizar";}else{
+                   echo "Cadastrar";
+               } ?>">
+
 
     </form>
+
 </section>
 <section id="direita">
 
@@ -74,7 +121,7 @@ if (isset($_POST['telefone'])){
                }//fim do forech
                 ?>
                 <td>
-                     <a href=''>Editar </a>
+                    <a href="index.php?id_up=<?php echo $dados[$i]['id'];?>">Editar</a>
                      <a href="index.php?id=<?php echo $dados[$i]['id'];?>">Excluir</a>
 
                 </td>
